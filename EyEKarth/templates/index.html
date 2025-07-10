@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eyekarthii Store - Visionary Style</title>
+    <!-- Montserrat Font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Custom Tailwind CSS Configuration
+        tailwind.config = {
+            darkMode: 'class', // Enable dark mode using a class
+            theme: {
+                extend: {
+                    fontFamily: {
+                        montserrat: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        // Light Mode Palette
+                        'bg-light': '#f8f9fa',
+                        'text-light': '#1f2937',
+                        'card-light': 'rgba(255, 255, 255, 0.4)',
+                        'border-light': 'rgba(255, 255, 255, 0.7)',
+                        
+                        // Dark Mode Palette
+                        'bg-dark': '#0d1117',
+                        'text-dark': '#e5e7eb',
+                        'card-dark': 'rgba(22, 27, 34, 0.4)',
+                        'border-dark': 'rgba(255, 255, 255, 0.1)',
+
+                        // Accent Palette
+                        'primary': '#00a9ff',
+                        'primary-dark': '#0077b6',
+                        'secondary': '#ff4d6d',
+                        'secondary-dark': '#c9184a',
+                    },
+                    transitionDuration: {
+                        '2000': '2000ms',
+                    },
+                    backdropBlur: {
+                        'xs': '2px',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            'from': { opacity: '0', transform: 'translateY(20px)' },
+                            'to': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        // Keyframe for Aurora Background moving left
+                        auroraLeft: {
+                            '0%': { transform: 'translateX(0) translateY(0)' },
+                            '50%': { transform: 'translateX(10%) translateY(5%)' },
+                            '100%': { transform: 'translateX(0) translateY(0)' },
+                        },
+                        // Keyframe for Aurora Background moving right
+                        auroraRight: {
+                            '0%': { transform: 'translateX(0) translateY(0)' },
+                            '50%': { transform: 'translateX(-10%) translateY(-5%)' },
+                            '100%': { transform: 'translateX(0) translateY(0)' },
+                        },
+                        // Keyframe for floating arrow
+                        bounceY: {
+                            '0%, 100%': { transform: 'translateY(-25%)', animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)' },
+                            '50%': { transform: 'translateY(0)', animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)' },
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+                        'aurora-left': 'auroraLeft 20s ease-in-out infinite alternate',
+                        'aurora-right': 'auroraRight 20s ease-in-out infinite alternate reverse', // Reverse for opposing motion
+                        'bounce-y': 'bounceY 1.5s infinite',
+                    },
+                    // Custom grid template for responsive product cards
+                    gridTemplateColumns: {
+                        'auto-fit': 'repeat(auto-fit, minmax(280px, 1fr))',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #2d3748; }
+        ::-webkit-scrollbar-thumb:hover { background: #2d3748; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #4a5568; }
+
+        /* --- Glassmorphism Card with Glow Effect --- */
+        .glass-card {
+            background: var(--tw-bg-card-light);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--tw-border-light);
+            position: relative;
+        }
+        .dark .glass-card {
+            background: var(--tw-bg-card-dark);
+            border-color: var(--tw-border-dark);
+        }
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 1rem; /* same as card's rounded-2xl */
+            border: 2px solid transparent;
+            /* Conic gradient for the rotating border glow */
+            background: conic-gradient(from var(--angle), transparent 20%, var(--tw-color-primary), var(--tw-color-secondary)) border-box;
+            /* Mask to cut out the inner part, creating a border effect */
+            mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask-composite: destination-out;
+            animation: rotate 5s linear infinite; /* Animation for the rotating glow */
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .product-card:hover::before {
+            opacity: 1; /* Show glow on hover */
+        }
+        /* Custom CSS property for the rotating angle */
+        @property --angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+        /* Keyframe for the rotating angle */
+        @keyframes rotate {
+            to { --angle: 360deg; }
+        }
+
+        /* --- Product Card Actions --- */
+        .product-card .product-actions {
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .product-card:hover .product-actions {
+            transform: translateY(0);
+        }
+        .product-card .product-image {
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        /* --- Nav Link Underline Effect --- */
+        .nav-link { position: relative; padding-bottom: 4px; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 2px;
+            background-color: #fff;
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+        }
+        .nav-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* --- 3D Slider Specific Styles --- */
+        .slider-images {
+            transform-style: preserve-3d; /* Enable 3D transformations for children */
+            perspective: 1000px; /* Define perspective for 3D effect */
+        }
+        .slider-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5); /* Default hidden state */
+            transition: all 1s ease-in-out; /* Smooth transitions for all properties */
+            object-fit: contain;
+            max-width: 100%;
+            max-height: 100%;
+            opacity: 0;
+            filter: blur(10px);
+            z-index: 1;
+        }
+        .slider-image.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            filter: blur(0);
+            z-index: 10;
+        }
+        .slider-image.next {
+            opacity: 0.7;
+            transform: translateX(50%) translateY(-50%) scale(0.7) rotateY(-30deg); /* Move to right, rotate */
+            filter: blur(4px);
+            z-index: 5;
+        }
+        .slider-image.previous {
+            opacity: 0.7;
+            transform: translateX(-150%) translateY(-50%) scale(0.7) rotateY(30deg); /* Move to left, rotate */
+            filter: blur(4px);
+            z-index: 5;
+        }
+    </style>
+</head>
+<body class="bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark font-montserrat transition-colors duration-500">
+
+<!-- === Header === -->
+<header id="main-header" class="bg-transparent text-white py-3 fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-5">
+        <a href="/" class="flex items-center gap-3 group">
+            <!-- Logo image from static folder -->
+            <img src="{{ url_for('static', filename='images/logopaglu.png') }}" alt="Eyekarthii logo" class="w-10 h-auto md:w-12 group-hover:rotate-[360deg] transition-transform duration-700 ease-in-out">
+            <div class="text-xl md:text-2xl font-bold text-white tracking-wide">Eyekarthii Store 👓</div>
+        </a>
+        <nav class="hidden md:flex items-center gap-4">
+            <a href="/" class="nav-link text-white font-semibold text-base px-3">Home</a>
+            <a href="/cart" class="nav-link text-white font-semibold text-base px-3">Cart</a>
+            <a href="/orders" class="nav-link text-white font-semibold text-base px-3">Orders</a>
+        </nav>
+        <div class="flex items-center gap-2 md:gap-4 justify-end">
+             {% if session.user %}
+                <!-- Profile Dropdown for logged-in users -->
+                <div class="relative hidden md:block" id="profile-dropdown-container">
+                    <button id="profile-menu-button" type="button" class="text-gray-200 hover:text-white focus:outline-none rounded-full p-2.5">
+                        <!-- Profile SVG Icon -->
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.623 18.623 0 0112 22.5a18.623 18.623 0 01-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" /></svg>
+                    </button>
+                    <!-- Dropdown Menu -->
+                    <div id="profile-dropdown-menu" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 hidden z-50">
+                        <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Profile</a>
+                        <a href="/logout" class="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <!-- Login/Register buttons for non-logged-in users -->
+                <a href="/login" class="hidden md:block nav-link text-white font-semibold text-sm md:text-base px-2 md:px-3">Login</a>
+                <a href="/register" class="hidden md:block text-white font-semibold px-4 py-2 rounded-md transition-colors bg-primary hover:bg-primary-dark shadow-lg hover:shadow-primary/50">Register</a>
+            {% endif %}
+            <button id="theme-toggle" type="button" class="text-gray-200 hover:text-white focus:outline-none rounded-lg text-sm p-2.5">
+                <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+            </button>
+        </div>
+    </div>
+</header>
+
+
+<!-- === Hero Section === -->
+<section class="slider-main flex flex-col justify-center items-center h-screen overflow-hidden relative z-10 p-5">
+    <!-- Aurora Background -->
+    <div class="absolute inset-0 z-[-1] bg-slate-900 overflow-hidden">
+        <!-- Animated aurora gradient circles -->
+        <div class="absolute bottom-0 left-[-20%] right-0 top-[-10%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))] animate-aurora-left"></div>
+        <div class="absolute bottom-0 right-[-20%] top-[-10%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(0,169,255,.15),rgba(255,255,255,0))] animate-aurora-right"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 items-center gap-8 lg:gap-16">
+        <!-- Content -->
+        <div class="slider-content-wrapper text-center lg:text-left">
+            <h2 class="font-black text-4xl leading-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary
+                        sm:text-5xl md:text-6xl md:leading-tight animate-fade-in-up" style="animation-delay: 0.1s;">
+                Visionary Style,<br> Unmatched Clarity.
+            </h2>
+            <p class="text-base leading-relaxed mb-8 text-gray-400 dark:text-gray-300
+                        md:text-lg md:leading-loose max-w-lg mx-auto lg:mx-0 animate-fade-in-up" style="animation-delay: 0.3s;">
+                Discover premium eyewear that blends timeless design with modern technology. Perfect fit, ultimate comfort, and a style for every story.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start animate-fade-in-up" style="animation-delay: 0.5s;">
+                <a href="#products" class="px-8 py-3.5 text-lg font-bold text-white bg-primary rounded-lg shadow-lg hover:shadow-primary/50 hover:bg-primary-dark transform hover:-translate-y-1 transition-all duration-300">
+                    Shop Now
+                </a>
+                <div class="social-icons flex items-center gap-4">
+                    <a href="#" target="_blank" class="text-gray-400 hover:text-primary transition-colors"><svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427C2.013 14.784 2 14.43 2 12s.012-2.784.06-3.808c.049-1.064.218 1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.488 2.465c.636-.247 1.363-.416 2.427-.465C9.93 2.013 10.284 2 12.315 2zM12 7a5 5 0 100 10 5 5 0 000-10zm0-2a7 7 0 110 14 7 7 0 010-14zm6.406-2.34a1.25 1.25 0 100 2.5 1.25 1.25 0 000-2.5z" clip-rule="evenodd" /></svg></a>
+                    <a href="#" target="_blank" class="text-gray-400 hover:text-primary transition-colors"><svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" /></svg></a>
+                    <a href="#" target="_blank" class="text-gray-400 hover:text-primary transition-colors"><svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image Slider -->
+        <div class="slider-images relative w-full h-[300px] lg:h-[500px] flex justify-center items-center">
+             <!-- Product images from static folder -->
+             <img class="slider-image" src="{{ url_for('static', filename='images/lackframe.jpeg') }}" alt="Black matte frame spectacles">
+             <img class="slider-image" src="{{ url_for('static', filename='images/gold.jpeg') }}" alt="Retro round glasses with gold rim">
+             <img class="slider-image" src="{{ url_for('static', filename='images/clear.jpeg') }}" alt="Clear frame premium eyeglasses">
+             <img class="slider-image" src="{{ url_for('static', filename='images/luelight.jpeg') }}" alt="Blue light filter stylish spectacles">
+             <img class="slider-image" src="{{ url_for('static', filename='images/rect.jpeg') }}" alt="Trendy brown rectangular frames">
+        </div>
+    </div>
+    <!-- Scroll Down Arrow -->
+    <a href="#products" class="absolute bottom-5 left-1/2 -translate-x-1/2 animate-bounce-y">
+        <svg class="w-8 h-8 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+    </a>
+</section>
+
+<!-- === Section Separator === -->
+<div class="relative bg-bg-light dark:bg-bg-dark">
+    <div class="absolute inset-0 bg-slate-900"></div>
+    <svg class="relative z-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+      <path fill="#f8f9fa" fill-opacity="1" d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,138.7C672,128,768,160,864,186.7C960,213,1056,235,1152,218.7C1248,203,1344,149,1392,122.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+       <path class="dark:fill-bg-dark" fill="#f8f9fa" d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,138.7C672,128,768,160,864,186.7C960,213,1056,235,1152,218.7C1248,203,1344,149,1392,122.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+    </svg>
+     <div class="dark:hidden absolute bottom-0 left-0 right-0 h-full bg-bg-light"></div>
+</div>
+<!-- === Products Section === -->
+<main id="products" class="container max-w-7xl mx-auto py-16 px-5 scroll-mt-20">
+    <div class="text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-black mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Our Products</h2>
+        <p class="text-lg text-gray-600 dark:text-gray-400">Hand-picked styles for every look.</p>
+    </div>
+
+    <div class="product-grid grid grid-cols-auto-fit gap-8">
+        {% for item in products %}
+        <div class="product-card group glass-card rounded-2xl overflow-hidden text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl dark:hover:shadow-primary/20 opacity-0" style="animation-delay: {{ loop.index0 * 100 }}ms">
+            <div class="relative overflow-hidden">
+                <!-- Product image -->
+                <img src="{{ url_for('static', filename=item.image_url) }}" alt="{{ item.name }}" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110" />
+                
+                <!-- Buttons -->
+                <div class="product-actions absolute bottom-0 left-0 w-full p-4 bg-black/50 backdrop-blur-xs flex justify-center gap-2.5">
+                    <form action="/add_to_cart" method="POST" class="w-1/2">
+                        <input type="hidden" name="product_id" value="{{ item._id }}">
+                        <button type="submit" class="w-full px-3.5 py-2 text-sm font-bold border-none rounded-md cursor-pointer transition-all duration-300 bg-primary text-white hover:bg-primary-dark transform hover:scale-105">
+                            Add to Cart
+                        </button>
+                    </form>
+                    <form action="/buy_now" method="POST" class="w-1/2">
+                        <input type="hidden" name="product_id" value="{{ item._id }}">
+                        <button type="submit" class="w-full px-3.5 py-2 text-sm font-bold border-none rounded-md cursor-pointer transition-all duration-300 bg-green-500 text-white hover:bg-green-600 transform hover:scale-105">
+                            Buy Now
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="p-5">
+                <h3 class="mt-1 mb-2 text-xl font-bold text-text-light dark:text-white">{{ item.name }}</h3>
+                <p class="text-sm leading-relaxed mb-4 text-gray-600 dark:text-gray-400 h-12 overflow-hidden">{{ item.description }}</p>
+                <p class="text-xl font-black text-secondary mt-2 mb-3">₹{{ item.price }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+
+<!-- === Footer === -->
+<footer class="bg-gray-900/90 backdrop-blur-lg text-gray-300 mt-24">
+    <div class="max-w-7xl mx-auto py-12 px-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- About Column -->
+            <div class="col-span-1 md:col-span-2 lg:col-span-1">
+                 <a href="/" class="flex items-center gap-3 mb-4">
+                    <!-- Logo image from static folder -->
+                    <img src="{{ url_for('static', filename='images/logopaglu.png') }}" alt="Eyekarthii logo" class="w-10 h-auto">
+                    <div class="text-xl font-bold text-white tracking-wide">Eyekarthii Store</div>
+                </a>
+                <p class="text-sm text-gray-400">Bringing you visionary style and unmatched clarity with our curated collection of premium eyewear.</p>
+            </div>
+            <!-- Links Column -->
+            <div>
+                <h4 class="font-bold text-white tracking-wider mb-4">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="/" class="hover:text-primary transition-colors">Home</a></li>
+                    <li><a href="#products" class="hover:text-primary transition-colors">Products</a></li>
+                    <li><a href="/cart" class="hover:text-primary transition-colors">Your Cart</a></li>
+                    <li><a href="/orders" class="hover:text-primary transition-colors">Your Orders</a></li>
+                </ul>
+            </div>
+             <!-- Legal Column -->
+            <div>
+                <h4 class="font-bold text-white tracking-wider mb-4">Legal</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-primary transition-colors">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Terms of Service</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Shipping Policy</a></li>
+                </ul>
+            </div>
+            <!-- Socials Column -->
+            <div>
+                <h4 class="font-bold text-white tracking-wider mb-4">Follow Us</h4>
+                <div class="flex items-center gap-4">
+                    <!-- Placeholder SVG for social icons -->
+                    <a href="#" target="_blank" class="text-gray-400 hover:text-primary transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427C2.013 14.784 2 14.43 2 12s.012-2.784.06-3.808c.049-1.064.218 1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.488 2.465c.636-.247 1.363-.416 2.427-.465C9.93 2.013 10.284 2 12.315 2zM12 7a5 5 0 100 10 5 5 0 000-10zm0-2a7 7 0 110 14 7 7 0 010-14zm6.406-2.34a1.25 1.25 0 100 2.5 1.25 1.25 0 000-2.5z" clip-rule="evenodd" /></svg></a>
+                    <a href="#" target="_blank" class="text-gray-400 hover:text-primary transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" /></svg></a>
+                    <a href="#" target="_blank" class="text-gray-400 hover:text-primary transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg></a>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-500">
+            <p>© 2024 Eyekarthii Store. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- Theme Toggler ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // Set initial theme based on localStorage or system preference
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        // Toggle theme on button click
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
+        });
+
+        // --- Header Scroll Effect ---
+        const header = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.remove('bg-transparent');
+                // Apply background with transparency and blur for a sleek effect
+                header.classList.add('bg-white/80', 'dark:bg-gray-900/80', 'backdrop-blur-md', 'shadow-lg');
+            } else {
+                header.classList.add('bg-transparent');
+                header.classList.remove('bg-white/80', 'dark:bg-gray-900/80', 'backdrop-blur-md', 'shadow-lg');
+            }
+        });
+
+        // --- 3D Image Slider ---
+        const slider = document.querySelector('.slider-images');
+        const images = Array.from(slider.querySelectorAll('.slider-image'));
+        let imageIndex = -1; // Start at -1 so the first call to updateSlider sets it to 0
+
+        function updateSlider() {
+            // Increment index to get the *next* image to be active
+            imageIndex = (imageIndex + 1) % images.length;
+
+            // Reset styles for all images
+            images.forEach((img, idx) => {
+                img.style.opacity = '0';
+                img.style.transform = 'translate(-50%, -50%) scale(0.5) rotateY(0deg)';
+                img.style.filter = 'blur(10px)';
+                img.style.zIndex = '1';
+                img.classList.remove('active', 'next', 'previous');
+            });
+            
+            // Determine current, next, and previous images
+            const currentImg = images[imageIndex];
+            const nextIndex = (imageIndex + 1) % images.length;
+            const prevIndex = (imageIndex - 1 + images.length) % images.length;
+            const nextImg = images[nextIndex];
+            const prevImg = images[prevIndex];
+
+            // Apply styles for the active image (center)
+            currentImg.style.opacity = '1';
+            currentImg.style.transform = 'translate(-50%, -50%) scale(1)';
+            currentImg.style.filter = 'blur(0)';
+            currentImg.style.zIndex = '10';
+            currentImg.classList.add('active');
+
+            // Apply styles for the next image (right side, slightly rotated)
+            nextImg.style.opacity = '0.7';
+            nextImg.style.transform = 'translateX(50%) translateY(-50%) scale(0.7) rotateY(-30deg)';
+            nextImg.style.filter = 'blur(4px)';
+            nextImg.style.zIndex = '5';
+            nextImg.classList.add('next');
+            
+            // Apply styles for the previous image (left side, slightly rotated)
+            prevImg.style.opacity = '0.7';
+            prevImg.style.transform = 'translateX(-150%) translateY(-50%) scale(0.7) rotateY(30deg)';
+            prevImg.style.filter = 'blur(4px)';
+            prevImg.style.zIndex = '5';
+            prevImg.classList.add('previous');
+        }
+
+        updateSlider(); // Initial call to set up the first image
+        setInterval(updateSlider, 4000); // Rotate images every 4 seconds
+
+        // --- Intersection Observer for Animations ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in-up');
+                    entry.target.classList.remove('opacity-0');
+                    observer.unobserve(entry.target); // Stop observing once animated
+                }
+            });
+        }, { threshold: 0.1 }); // Trigger when 10% of the element is visible
+
+        // Observe all product cards for fade-in animation
+        document.querySelectorAll('.product-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // --- Profile Dropdown Toggle ---
+        const profileMenuButton = document.getElementById('profile-menu-button');
+        const profileDropdownMenu = document.getElementById('profile-dropdown-menu');
+
+        if (profileMenuButton && profileDropdownMenu) { // Ensure elements exist (only if session.user is true)
+            profileMenuButton.addEventListener('click', function(event) {
+                event.stopPropagation(); // Prevent document click from immediately closing it
+                profileDropdownMenu.classList.toggle('hidden');
+            });
+
+            // Close the dropdown if the user clicks outside of it
+            document.addEventListener('click', function(event) {
+                if (!profileDropdownMenu.contains(event.target) && !profileMenuButton.contains(event.target)) {
+                    profileDropdownMenu.classList.add('hidden');
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
