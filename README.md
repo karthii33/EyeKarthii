@@ -54,3 +54,67 @@ A modern, responsive e-commerce web application for selling eyewear products. Bu
    ```bash
    git clone https://github.com/karthii33/EyeKarthii.git
    cd EyeKarthii
+2. **Install dependencies**
+
+bash
+Copy
+Edit
+# For Python/Flask
+pip install -r requirements.txt
+
+# For Node.js/Express
+npm install
+3. **Configure environment variables**
+Create a .env file:
+
+ini
+Copy
+Edit
+SECRET_KEY=your_secret_key
+DATABASE_URL=your_database_uri
+4 .**Initialize database**
+
+bash
+Copy
+Edit
+# Flask example
+flask db upgrade
+flask seed
+
+# Node.js example
+npm run migrate
+npm run seed
+5. **Start the server**
+
+bash
+Copy
+Edit
+# Flask
+flask run
+
+# Node
+npm start
+6. Visit: Open http://localhost:5000 in your browser
+
+#📁 Project Structure
+csharp
+Copy
+Edit
+EyeKarthii/
+│
+├── templates/         # HTML templates
+│   ├── layout.html    # Shared layout
+│   ├── index.html     # Product listing
+│   ├── cart.html
+│   ├── orders.html
+│   └── auth/          # login, register, profile
+│
+├── static/
+│   ├── css/
+│   └── js/            # Client-side scripts (e.g. mode-toggle)
+│
+├── models/            # ORM models (Product, User, Order)
+├── routes/            # Route handlers
+├── utils/             # Helper functions
+└── app.py             # Flask or Express app entrypoint
+
