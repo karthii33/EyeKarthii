@@ -54,6 +54,7 @@ A modern, responsive e-commerce web application for selling eyewear products. Bu
    ```bash
    git clone https://github.com/karthii33/EyeKarthii.git
    cd EyeKarthii
+   
 2. **Install dependencies**
 
 bash
@@ -97,24 +98,22 @@ npm start
 6. Visit: Open http://localhost:5000 in your browser
 
 #📁 Project Structure
-csharp
-Copy
-Edit
 EyeKarthii/
 │
-├── templates/         # HTML templates
-│   ├── layout.html    # Shared layout
-│   ├── index.html     # Product listing
+├── templates/          # HTML Templates
+│   ├── index.html
 │   ├── cart.html
 │   ├── orders.html
-│   └── auth/          # login, register, profile
+│   └── auth/
+│       ├── login.html
+│       └── register.html
 │
 ├── static/
 │   ├── css/
-│   └── js/            # Client-side scripts (e.g. mode-toggle)
+│   └── js/
 │
-├── models/            # ORM models (Product, User, Order)
-├── routes/            # Route handlers
-├── utils/             # Helper functions
-└── app.py             # Flask or Express app entrypoint
-
+├── models/             # Database models
+├── routes/             # Route handlers
+├── app.py              # Flask main app file
+├── requirements.txt    # Python dependencies
+└── README.md
